@@ -2,17 +2,27 @@
  *  Copyright (c) Peter Bjorklund. All rights reserved. https://github.com/piot/conclave-room-rs
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------------------*/
-use std::collections::HashMap;
+//! The Conclave Logic for a Room
+//!
+//! Evaluating connection quality for all connections attached to the room. Using "votes" from the connections, together with
+//! [Knowledge] and [ConnectionQuality] it determines which connection should be appointed leader.
+
+ use std::collections::HashMap;
 use std::time::Instant;
 
+/// ID or index for a room connection
 pub type ConnectionIndex = u8;
 
-const ILLEGAL_CONNECTION_INDEX: u8 = 0xff;
+/// The reserved index for connection index
+const ILLEGAL_CONNECTION_INDEX: ConnectionIndex = 0xff;
 
+/// The knowledge of the game state, typically the step or tick ID.
 pub type Knowledge = u64;
 
+/// The term that Leader is currently running.
 pub type Term = u16;
 
+/// Evaluating how many times something occurs every second.
 pub struct RateMetrics {
     count: u32,
     last_calculated_at: Instant,
@@ -53,6 +63,7 @@ impl RateMetrics {
     }
 }
 
+/// Resulting Assessment made by [ConnectionQuality]
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub enum QualityAssessment {
     NeedMoreTimeOrInformation,
@@ -61,6 +72,7 @@ pub enum QualityAssessment {
     Good,
 }
 
+/// Evaluate room connection quality
 pub struct ConnectionQuality {
     pub last_ping_at: Instant,
     pub pings_per_second: RateMetrics,
@@ -104,6 +116,8 @@ pub enum ConnectionState {
     Disconnected,
 }
 
+
+/// A Room Connection
 pub struct Connection {
     pub id: ConnectionIndex,
     pub quality: ConnectionQuality,
@@ -127,7 +141,7 @@ impl Connection {
         }
     }
 
-    fn on_ping(
+    pub fn on_ping(
         &mut self,
         term: Term,
         has_connection_to_host: bool,
@@ -141,6 +155,7 @@ impl Connection {
     }
 }
 
+/// Contains the Room [Connection]s as well the appointed Leader.
 pub struct Room {
     pub id: ConnectionIndex,
     pub connections: HashMap<ConnectionIndex, Connection>,
