@@ -1,6 +1,6 @@
 [package]
 name = "conclave-room"
-version = "0.0.1"
+version = "0.0.2-pre01"
 edition = "2021"
 license = "MIT"
 description = "Logic for a Conclave Room"
