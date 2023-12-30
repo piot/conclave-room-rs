@@ -9,7 +9,3 @@ repository = "https://github.com/piot/conclave-room-rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-
-[build]
-rustflags = ["-D", "warnings"]
