@@ -146,8 +146,8 @@ pub struct Room {
     pub term: Term,
 }
 
-impl Room {
-    pub fn default() -> Self {
+impl Default for Room {
+    fn default() -> Self {
         Self {
             term: 0,
             id: 0,
@@ -155,6 +155,9 @@ impl Room {
             leader_index: ILLEGAL_CONNECTION_INDEX,
         }
     }
+}
+
+impl Room {
     pub fn new() -> Self {
         eprintln!("===================\ncreating a room");
         return Room::default();
